@@ -1379,7 +1379,7 @@ settings_card-preview-zoom = 卡牌预览缩放
 
 settings_card-text = 卡牌文本
 
-settings_change-avatar = 在gravatar.com上更换
+settings_change-avatar = 在WeAvatar上更换
 
 settings_change-email = 更换电子邮箱
 
