@@ -5,7 +5,7 @@
    [nr.admin :refer [admin]]
    [nr.appstate :refer [app-state]]
    [nr.cardbrowser :refer [card-browser]]
-   [nr.chat :refer [chat-page]]
+  ;;  [nr.chat :refer [chat-page]]
    [nr.deckbuilder :refer [deck-builder]]
    [nr.features :refer [features]]
    [nr.gameboard.board :refer [gameboard]]
@@ -36,8 +36,8 @@
   (rf/router
     [["/" {:name :nav/welcome
            :view landing}]
-      ["/chat" {:name :nav/chat
-           :view chat-page}]
+      ;; ["/chat" {:name :nav/chat
+      ;;      :view chat-page}]
      ["/cards" {:name :nav/cards
                 :view card-browser}]
      ["/deckbuilder" {:name :nav/deckbuilder
