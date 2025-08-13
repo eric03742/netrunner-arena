@@ -12,9 +12,9 @@
   [{:title [:nav_welcome "Welcome"]
     :cls "landing"
     :route "/"}
-    {:title [:nav_chat "Chat"]
-    :cls "chat"
-    :route "/chat"}
+    ;; {:title [:nav_chat "Chat"]
+    ;; :cls "chat"
+    ;; :route "/chat"}
    {:title [:nav_cards "Cards"]
     :cls "card"
     :route "/cards"}

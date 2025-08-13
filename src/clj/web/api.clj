@@ -28,7 +28,7 @@
 
 (add-encoder org.bson.types.ObjectId encode-str)
 
-(def paths ["" "chat" "cards" "deckbuilder" "play" "help" "account" "stats" "about" "tournament" "admin" "users" "prizes" "features"])
+(def paths ["" "cards" "deckbuilder" "play" "help" "account" "stats" "about" "tournament" "admin" "users" "prizes" "features"])
 
 (defn base-routes []
   (ring/router
