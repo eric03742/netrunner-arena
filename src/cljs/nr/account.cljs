@@ -298,8 +298,8 @@
           [:section
            [:h3 (tr [:settings_avatar "Avatar"])]
            [avatar @user {:opts {:size 38}}]
-           [:a {:href "http://gravatar.com" :target "_blank"}
-            (tr [:settings_change-avatar "Change on gravatar.com"])]]
+           [:a {:href "https://weavatar.com/" :target "_blank"}
+            (tr [:settings_change-avatar "Change on WeAvatar"])]]
           [:section
            [:h3 (tr [:settings_pronouns "Pronouns"])]
            [:select {:value (:pronouns @s "none")

@@ -181,7 +181,7 @@
             {:id "avatar"
              :title "How do I change my avatar?"
              :content [:ul
-                        [:p "Go to " [:a {:href "http://gravatar.com" :target "_blank"} "gravatar.com"]
+                        [:p "Go to " [:a {:href "https://weavatar.com/" :target "_blank"} "weavatar.com"]
                          " and create an account with the same email as the one used to register on Jinteki.net. Please note that "
                          "it can sometimes take up to a few hours for the new avatar to be visible on the site."]]}
             {:id "bestbrowser"
