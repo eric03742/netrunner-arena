@@ -22,7 +22,7 @@
 
 (defn download-cobra-data
   [id]
-  (let [data (http/get (str "http://cobr.ai/tournaments/" id ".json"))
+  (let [data (http/get (str "http://tournaments.nullsignal.games/tournaments/" id ".json"))
         {:keys [status body error headers]} @data]
     (cond
       error (throw (Exception. (str "Failed to download file " error)))
