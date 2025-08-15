@@ -20,13 +20,13 @@
         [:meta {:name "viewport" :content "width=device-width, initial-scale=0.6, minimal-ui"}]
         [:meta {:name "apple-mobile-web-app-capable" :content "yes"}]
         [:meta {:property "og:type" :content (:type og "website")}]
-        [:meta {:property "og:url" :content (:url og "https://jinteki.net")}]
-        [:meta {:property "og:image" :content (:image og "https://www.jinteki.net/img/icons/jinteki_167.png")}]
+        [:meta {:property "og:url" :content (:url og "https://play.sneakdoorbeta.net")}]
+        [:meta {:property "og:image" :content (:image og "https://play.sneakdoorbeta.net/img/icons/jinteki_167.png")}]
         [:meta {:property "og:title" :content (:title og "Play Netrunner in your browser")}]
-        [:meta {:property "og:site_name" :content (:site_name og "jinteki.net")}]
-        [:meta {:property "og:description" :content (:description og "Build Netrunner decks and test them online against other players.")}]
+        [:meta {:property "og:site_name" :content (:site_name og "play.sneakdoorbeta.net")}]
+        [:meta {:property "og:description" :content (:description og "《矩阵潜袭》国服对战平台")}]
         [:link {:rel "apple-touch-icon" :href "/img/icons/jinteki_167.png"}]
-        [:title "Jinteki"]
+        [:title "矩阵潜袭在线对战"]
         (hiccup/include-css "/lib/css/toastr.min.css")
         (if (= "dev" server-mode)
           (hiccup/include-css "/css/netrunner.css")
@@ -64,7 +64,7 @@
       200
       (hiccup/html5
         [:head
-         [:title "Jinteki"]
+         [:title "矩阵潜袭在线对战"]
          (hiccup/include-css "/css/netrunner.css")]
         [:body
          [:div.reset-bg]

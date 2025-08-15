@@ -609,7 +609,7 @@
         :on-click #(swap! state assoc
                           :search-query ""
                           :sort-field "Faction"
-                          :format-filter "All"
+                          :format-filter "Standard"
                           :set-filter "All"
                           :type-filter "All"
                           :side-filter "All"
@@ -637,7 +637,7 @@
 (defn card-browser []
   (let [state (r/atom {:search-query ""
                        :sort-field "Faction"
-                       :format-filter "All"
+                       :format-filter "Standard"
                        :set-filter "All"
                        :type-filter "All"
                        :side-filter "All"
