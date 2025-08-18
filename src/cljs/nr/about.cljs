@@ -27,11 +27,30 @@
        :reagent-render
        (fn [_ _]
          [:div.about.panel.content-page.blue-shade {:ref #(reset! !node-ref %)}
-          [:h3 "About"]
+          [:h3 "关于"]
           [:p "This website was founded by " [:a {:href "http://twitter.com/mtgred" :target "_blank"} "@mtgred"]
            ", an avid Netrunner player from Belgium. The goal is to provide a great way to create and test Netrunner decks online."]
+          [:p "国服由 " [:a {:href "https://github.com/eric03742" :target "_blank"} "@Eric03742"] " 负责维护"]
 
-          [:h3 "Development"]
+          [:h3 "打赏"]
+          [:p "Donations are appreciated and help finance fast servers. You can support the project financially with PayPal or Bitcoin. Alternate art cards will be enabled on your account as a token of gratitude. Please specify your username with your donation."]
+          [:ul.list.compact
+           [:li "PayPal: mtgred@gmail.com or " [:a {:href "https://www.paypal.me/mtgred" :title "PayPal" :target "_blank"} "paypal.me/mtgred"]]
+           [:li "Bitcoin: " [:span.bitcoin "1MRRtCsZYGdgwvRo4NMhmo14q7KJNtAiKL" [:img.qr {:src "/img/bitcoin.png" :alt "Bitcoin QR Code"}]]]
+           [:li "支持国服开发与维护: " [:span.bitcoin "显示二维码" [:img.qr {:src "/img/wechat_donor.jpg" :alt "微信赞赏码"}]]]]
+          
+          [:p "Many thanks to all the donors. Your contributions and kind words are greatly appreciated. You help finance fast servers."]
+          [:ul.list.compact
+           (for [d @donors]
+             ^{:key d}
+             [:li d])]
+
+          [:h3 "开发"]
+          [:h4 "国服开发团队"]
+          [:ul.list.compact
+           [:li "Eric03742: 服务器维护，国服功能开发"]
+           ]
+
           [:h4 "Software Development Team"]
           [:ul.list.compact
            [:li "mtgred: Founder, original sole developer. Retired."]
@@ -74,18 +93,7 @@
            [:a {:href "https://docs.google.com/spreadsheets/d/1ICv19cNjSaW9C-DoEEGH3iFt09PBTob4CAutGex0gnE/pubhtml"
                 :target "_blank"} "status"] "."]
 
-          [:h3 "Donations"]
-          [:p "Donations are appreciated and help finance fast servers. You can support the project financially with PayPal or Bitcoin. Alternate art cards will be enabled on your account as a token of gratitude. Please specify your username with your donation."]
-          [:ul.list.compact
-           [:li "PayPal: mtgred@gmail.com or " [:a {:href "https://www.paypal.me/mtgred" :title "PayPal" :target "_blank"} "paypal.me/mtgred"]]
-           [:li "Bitcoin: " [:span.bitcoin "1MRRtCsZYGdgwvRo4NMhmo14q7KJNtAiKL" [:img.qr {:src "/img/bitcoin.png" :alt "Bitcoin QR Code"}]]]]
-
-          [:p "Many thanks to all the donors. Your contributions and kind words are greatly appreciated. You help finance fast servers."]
-          [:ul.list.compact
-           (for [d @donors]
-             ^{:key d}
-             [:li d])]
-          [:h3 "Disclaimer"]
+          [:h3 "版权信息"]
           [:p "Netrunner is a trademark of Fantasy Flight Publishing, Inc. and/or Wizards of the Coast LLC."]
           [:p "This is website is not affiliated with Fantasy Flight Games or Wizards of the Coast."]
           [:p "Targeting icon made by "
