@@ -37,6 +37,8 @@
      :password         (password/encrypt password)
      :isadmin          (or isadmin false)
      :options          {:default-format "standard"
+                        :deckstats "always"
+                        :gamestats "always"
                         :pronouns "none"}}))
 
 (defn active-user?
