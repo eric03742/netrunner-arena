@@ -940,13 +940,18 @@
        hand))])
 
 (defn hand-view []
-  (let [s (r/atom {})]
+  (let [s (r/atom {})
+        ordering (r/atom :natural)]
     (fn [side hand hand-size hand-count popup popup-direction discard]
       (let [flashbacks (if discard (map #(assoc % :flashback-fake-in-hand true) (filter :flashback-playable @discard))
                            [])
             printed-size (if (nil? @hand-count) (count @hand) @hand-count)
             size (+ printed-size (count flashbacks))
-            filled-hand (concat (map #(dissoc % :flashback) @hand)
+            sorted-hand (case @ordering
+                          :natural @hand
+                          :title (sort-by :title @hand)
+                          :type (sort-by (juxt :type :title) @hand))
+            filled-hand (concat (map #(dissoc % :flashback) sorted-hand)
                                 flashbacks
                                 (repeat (- size (+ (count @hand) (count flashbacks))) {:side (if (= :corp side) "Corp" "Runner")}))]
         [:div.hand-container
@@ -959,9 +964,16 @@
                                        (tr [:game_grip "Grip"]))
                                :fn (fn [_] (str printed-size "/" (:total @hand-size)))}]]
           (when popup
-            [:div.panel.blue-shade.hand-expand
-             {:on-click #(-> (:hand-popup @s) js/$ .fadeToggle)}
-             "+"])]
+            [:div.hand-controls
+             [:div.panel.blue-shade.hand-expand
+              {:on-click #(-> (:hand-popup @s) js/$ .fadeToggle)}
+              "+"]
+             [:div.panel.blue-shade.hand-sort
+              {:on-click (fn [] (reset! ordering (case @ordering :natural :title :title :type :type :natural)))}
+              (case @ordering
+                :natural "#"
+                :title "t"
+                :type "y")]])]
          (when popup
            [:div.panel.blue-shade.popup {:ref #(swap! s assoc :hand-popup %) :class popup-direction}
             [:div
@@ -1988,8 +2000,7 @@
 (defn- time-until
   "Helper method for timer. Computes how much time is left until `end`"
   [end]
-  (let [
-        now (inst/now)
+  (let [now (inst/now)
         diff (duration/between now end)
         total-seconds (duration/get diff chrono/seconds)
         minutes (abs (quot total-seconds 60))
@@ -2046,6 +2057,18 @@
         seconds (mod (abs total-seconds) 60)]
     {:minutes minutes :seconds seconds}))
 
+(defn- time-left-in-round
+  "Helper method for match duration. Computes how much time since game start"
+  [end]
+  (let [end-time (-> end
+                     (inst/parse))
+        now (inst/now)
+        diff (duration/between end-time now)
+        total-seconds (duration/get diff chrono/seconds)
+        minutes (abs (quot total-seconds 60))
+        seconds (mod (abs total-seconds) 60)]
+    {:minutes minutes :seconds seconds}))
+
 (defn match-duration
   "Component which displays a readout of the time since the start of the match."
   [start-date hidden]
@@ -2068,22 +2091,40 @@
             (:minutes @duration) (tr [:game_minutes "m:"])
             (:seconds @duration) (tr [:game_seconds "s"])]))})))
 
+(defn- adjusted-round-end [app-state]
+  (let [{:keys [room round-end-time excluded? time-extension]} (:current-game @app-state)]
+    (when (and (= room "competitive")
+               (not excluded?)
+               round-end-time)
+      (inst/plus round-end-time (duration/of-minutes (or time-extension 0))))))
+
 (defn starting-timestamp [start-date timer]
   ;; I don't like using js/Date, but `toLocalTimeString`
   ;; is just too convenient
   (let [hide-timer (r/atom false)]
     (fn []
-      [:div.panel.blue-shade.timestamp
-       [:span.float-center
-        (tr [:game_game-start "Game start"] {:timestamp (.toLocaleTimeString (js/Date. start-date))})]
-       [:<>
-        [:span.pm {:on-click #(swap! hide-timer not)}
-         (if @hide-timer "+" "-")]
-        (if timer [:span {:on-click #(swap! hide-timer not)}
-                        [time-remaining start-date timer hide-timer]]
-                  [:span {:on-click #(swap! hide-timer not)}
-                        [match-duration start-date hide-timer]])]])))
+      (let [round-end (adjusted-round-end app-state)
+            round-end-date (when round-end (js/Date. (inst/to-epoch-milli round-end)))
+            extension (get-in @app-state [:current-game :time-extension] 0)]
+        (if round-end
+          [:div.panel.blue-shade.timestamp
+           [:span.float-center
+            (tr [:game_round-end "Round end"] {:timestamp (.toLocaleTimeString round-end-date)})]
+           (when (pos? extension)
+             [:span.float-center
+              (tr [:game_round-extension (str "(includes " extension "m time extension)")]
+                  {:extension extension})])]
 
+          [:div.panel.blue-shade.timestamp
+           [:span.float-center
+            (tr [:game_game-start "Game start"] {:timestamp (.toLocaleTimeString (js/Date. start-date))})]
+           [:<>
+            [:span.pm {:on-click #(swap! hide-timer not)}
+             (if @hide-timer "+" "-")]
+            (if timer [:span {:on-click #(swap! hide-timer not)}
+                       [time-remaining start-date timer hide-timer]]
+                [:span {:on-click #(swap! hide-timer not)}
+                 [match-duration start-date hide-timer]])]])))))
 
 (defn- handle-click [{:keys [render-board?]} e]
   (when render-board?

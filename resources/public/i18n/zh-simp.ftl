@@ -1630,6 +1630,54 @@ stats_view-games = 返回统计界面
 
 stats_view-log = 查看记录
 
+sndb_form-signup = 注册
+
+sndb_form-create-account = 创建一个账号
+
+sndb_form-placeholder-email = 邮箱
+
+sndb_form-msg-invalid-email = 请输入合法的电子邮件地址
+
+sndb_form-placeholder-username = 用户名
+
+sndb_form-placeholder-password = 密码
+
+sndb_form-placeholder-confirm-password = 确认密码
+
+sndb_form-msg-password-mismatch = 请输入相同的密码
+
+sndb_form-msg-empty-email = 邮箱不能为空
+
+sndb_form-msg-empty-username = 用户名不能为空
+
+sndb_form-msg-long-username = 用户名不能超过20个字符
+
+sndb_form-msg-empty-password = 密码不能为空
+
+sndb_form-msg-password-matching = 两次密码必须一致
+
+sndb_form-cancel = 取消
+
+sndb_form-already-account = 已有账号？
+
+sndb_form-login = 登录
+
+sndb_no-account = 没有账号？
+
+sndb_username-taken = 用户名已被占用
+
+sndb_username-invalid-length = 用户名过长/过短
+
+sndb_email-taken = 邮箱已被占用
+
+sndb_invalid-login-password = 无效的登录或密码
+
+sndb_account-banned = 账号已被封禁
+
+sndb_no-account-exist = 邮箱对应的账号不存在
+
+sndb_email_used = 邮箱已被使用
+
 stats_win-method = 胜利方式: {$reason ->
     [Agenda] 议案
     [Claim] 宣称

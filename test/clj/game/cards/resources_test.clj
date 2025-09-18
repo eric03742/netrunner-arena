@@ -1653,6 +1653,16 @@
       (run-jack-out state)
       (is (= 2 (get-strength (refresh faust))) "Dean Lister effect ends after run"))))
 
+(deftest dean-lister-ncigs
+  (do-game
+    (new-game {:runner {:hand ["Dean Lister"]}})
+    (take-credits state :corp)
+    (play-from-hand state :runner "Dean Lister")
+    (run-on state :hq)
+    (card-ability state :runner (get-resource state 0) 0)
+    (is (no-prompt? state :runner) "No prompt because no targets")
+    (is (is-discard? state :runner ["Dean Lister"]) "Dean lister is trashed")))
+
 (deftest debbie-downtown-moreira
   (do-game
     (new-game {:corp {:hand ["Rashida Jaheem"]}
@@ -3881,8 +3891,11 @@
     (let [dc (get-resource state 1)]
       (is (changed? [(:credit (get-runner)) 3
                      (count (:hand (get-runner))) 1]
-                    (click-card state :runner dc))
+            (click-card state :runner (get-resource state 0))
+            (is (not (no-prompt? state :runner)) "can't trash self")
+            (click-card state :runner dc))
           "sells casts for 3 credits and a card")
+      (is (is-discard? state :runner ["Daily Casts"]))
       (is (= (refresh dc) nil) "Daily Casts should be in Heap"))))
 
 (deftest kongamato

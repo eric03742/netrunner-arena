@@ -504,6 +504,7 @@ game_gain-credit = Gain Credit
 
 game_game-start = Game start: {$timestamp}
 
+
 game_grip = Grip
 
 game_heap = Heap ({$cnt})
@@ -585,6 +586,10 @@ game_rez-all = Rez All
 game_rfg = Removed from the game
 
 game_rnd = R&D
+
+game_round-end = Round end: {$timestamp}
+
+game_round-extension = (Includes {$minutes}m time extension)
 
 game_run = Run
 
@@ -1276,10 +1281,14 @@ set_name = {$name ->
     [ezbior-alt-arts] Ezbior Alt Arts
     [kalypso-alt-arts] Kalypso Alt Arts
     [elessarellie-alt-arts] ElessarEllie Alt Arts
+    [lucius-felimus-alt-arts] Lucius Felimus Alt Arts
     [mr-alt-arts] M.R. Alt Arts
     [maysleyline-alt-arts] mays.leyline Alt Arts
+    [monde-alt-arts] Monde Alt Arts
     [nicky-cheng-alt-arts] Nicky Cheng Alt Arts
+    [plural-alt-arts] Plural Alt Arts
     [scott-uminga-alt-arts] Scott Uminga Alt Arts
+    [stwyde-alt-arts] Stwyde Alt Arts
     [the-tag-mill-alt-arts] The Tag Mill Alt Arts
     [valenetrunner-alt-arts] ValeNetrunner Alt Arts
     [igor-lebedev-alt-arts] Igor Lebedev Alt Arts
@@ -1605,6 +1614,54 @@ stats_unique-accesses = Unique Cards Accessed
 stats_view-games = Return to stats screen
 
 stats_view-log = View log
+
+sndb_form-signup = Sign up
+
+sndb_form-create-account = Create an account
+
+sndb_form-placeholder-email = Email
+
+sndb_form-msg-invalid-email = Please enter a valid email address
+
+sndb_form-placeholder-username = Username
+
+sndb_form-placeholder-password = Password
+
+sndb_form-placeholder-confirm-password = Confirm password
+
+sndb_form-msg-password-mismatch = Please enter matching passwords
+
+sndb_form-msg-empty-email = Email can't be empty
+
+sndb_form-msg-empty-username = Username can't be empty
+
+sndb_form-msg-long-username = Username must be 20 characters or shorter
+
+sndb_form-msg-empty-password = Password can't be empty
+
+sndb_form-msg-password-matching = Passwords must match
+
+sndb_form-cancel = Cancel
+
+sndb_form-already-account = Already have an account? 
+
+sndb_form-login = Log in
+
+sndb_no-account = No account? 
+
+sndb_username-taken = Username taken
+
+sndb_username-invalid-length = Username too short/too long
+
+sndb_email-taken = Email taken
+
+sndb_invalid-login-password = Invalid login or password
+
+sndb_account-banned = Account banned
+
+sndb_no-account-exist = No account with that email address exists
+
+sndb_email_used = Email already used
 
 stats_win-method = Win method: {$reason ->
     [Agenda] Agenda
