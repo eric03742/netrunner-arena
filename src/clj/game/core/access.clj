@@ -463,6 +463,7 @@
       (when (:breach @state)
         (let [zone (or (#{:discard :deck :hand} (first (get-zone card)))
                        (second (get-zone card)))]
+          (swap! state update-in [:breach :known-cids zone] conj (:cid card))
           (swap! state update-in [:breach :cards-accessed zone] (fnil inc 0))))
       (when (:run @state)
         (let [zone (or (#{:discard :deck :hand} (first (get-zone card)))
@@ -843,35 +844,45 @@
         (req (if (any-effects state side :corp-choose-hq-access)
                ;; corp chooses access
                (continue-ability
-                state :corp
-                {:async true
-                 :prompt (str "Choose a card in HQ for the Runner to access")
-                 :waiting-prompt true
-                 :choices {:all true
-                           :card #(and (in-hand? %)
-                                       (corp? %)
-                                       (not (already-accessed-fn %)))}
-                 :effect (req (wait-for (access-card state :runner target (:title target))
-                                        (continue-ability
-                                         state :runner
-                                         (access-helper-hq
-                                          state {:random-access-limit (dec random-access-limit)
-                                                 :total-mod (access-bonus-count state side :total)
-                                                 :chosen (inc chosen)}
-                                          (conj already-accessed (:cid target)) args)
-                                         card nil)))}
-                card nil)
+                 state :corp
+                 {:async true
+                  :prompt (str "Choose a card in HQ for the Runner to access (clicking done will randomly choose a candidate)")
+                  :waiting-prompt true
+                  :choices {:card #(and (in-hand? %)
+                                        (corp? %)
+                                        (not (already-accessed-fn %)))}
+                  :effect (req (wait-for (access-card state :runner target (:title target))
+                                         (continue-ability
+                                           state :runner
+                                           (access-helper-hq
+                                             state {:random-access-limit (dec random-access-limit)
+                                                    :total-mod (access-bonus-count state side :total)
+                                                    :chosen (inc chosen)}
+                                             (conj already-accessed (:cid target)) args)
+                                           card nil)))
+                  :cancel-effect (req (let [accessed (first (drop-while already-accessed-fn (access-cards-from-hq state)))]
+                                        (system-msg state side (str "randomly chooses " (:title accessed) " to be accessed"))
+                                        (wait-for (access-card state side accessed (:title accessed))
+                                                  (continue-ability
+                                                    state side
+                                                    (access-helper-hq
+                                                      state {:random-access-limit (dec random-access-limit)
+                                                             :total-mod (access-bonus-count state side :total)
+                                                             :chosen (inc chosen)}
+                                                      (conj already-accessed (:cid accessed)) args)
+                                                    card nil))))}
+                 card nil)
                ;; normal access
                (let [accessed (first (drop-while already-accessed-fn (access-cards-from-hq state)))]
                  (wait-for (access-card state side accessed (:title accessed))
                            (continue-ability
-                            state side
-                            (access-helper-hq
-                             state {:random-access-limit (dec random-access-limit)
-                                    :total-mod (access-bonus-count state side :total)
-                                    :chosen (inc chosen)}
-                             (conj already-accessed (:cid accessed)) args)
-                            card nil)))))
+                             state side
+                             (access-helper-hq
+                               state {:random-access-limit (dec random-access-limit)
+                                      :total-mod (access-bonus-count state side :total)
+                                      :chosen (inc chosen)}
+                               (conj already-accessed (:cid accessed)) args)
+                             card nil)))))
 
         unrezzed-cards-fn
         (req
@@ -1324,12 +1335,15 @@
 
 (defn turn-archives-faceup
   [state side server]
+  ;; note - in a paper game, players may freely re-order Archives
+  ;; We don't have that functionality, so we have to pseudo-shuffle archives before cards are flipped
+  ;; in order to stop information leaking that should not be leaking (ie order of cards trashed)
+  ;;   --nbk, 2025
   (when (= :archives (get-server-type (first server)))
-    (doseq [card (get-in @state [:corp :discard])]
-      ;; this lets us distinguish the most freshly revealed cards from archives
-      (if (:seen card)
-        (update! state side (dissoc card :new))
-        (update! state side (assoc card :seen true :new true))))))
+    (let [discard (get-in @state [:corp :discard])
+          known   (->> discard (filter :seen) (map #(dissoc % :new)))
+          unknown (->> discard (filter (complement :seen)) shuffle (map #(assoc % :seen true :new true)))]
+      (swap! state assoc-in [:corp :discard] (concat known unknown)))))
 
 (defn clean-access-args
   [{:keys [access-first] :as args}]
