@@ -62,6 +62,7 @@
   [:div.page-container
    [:div.worlds2020]
    [:div.landing-message
+    [:h4 "《矩阵潜袭》中文门户网站上线！欢迎访问 " [:a {:href "https://sneakdoorbeta.net/" :target "_blank"} "https://sneakdoorbeta.net/"]]
     [:h4 "关注“矩阵潜袭”公众号或加入QQ群706776764以获取游戏规则及更多资源。"]]
    landing-content])
 
