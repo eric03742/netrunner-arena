@@ -193,6 +193,20 @@
       (map (fn [[k v]] [(regex-of k) (span-of v)]))
       (sort-by (comp count str first) >))))
 
+(def mask-card-name-patterns
+  (letfn [(regex-of [icon-code] (re-pattern (str "(?i)" (regex-escape icon-code))))]
+    (->> {"思" "「601D」"
+          }
+         (map (fn [[k v]] [(regex-of k) v]))
+         (sort-by (comp count str first) >))))
+
+(def unmask-card-name-patterns
+  (letfn [(regex-of [icon-code] (re-pattern (str "(?i)" (regex-escape icon-code))))]
+    (->> {"「601D」" "思"
+          }
+         (map (fn [[k v]] [(regex-of k) v]))
+         (sort-by (comp count str first) >))))
+
 (defn card-patterns-impl
   "A sequence of card pattern pairs consisting of a regex, used to match a card
   name in text, and the span fragment that should replace it"
@@ -301,10 +315,20 @@
   [input]
   (render-input input special-patterns))
 
+(defn render-mask-cards
+  "Render all cards in a given text or HTML fragment input"
+  [input]
+  (render-input input mask-card-name-patterns))
+
+(defn render-unmask-cards
+  "Render all cards in a given text or HTML fragment input"
+  [input]
+  (render-input input unmask-card-name-patterns))
+
 (defn render-message
   "Render icons, cards and special codes in a message"
   [input]
-  (render-specials (render-icons (render-cards input))))
+  (render-specials (render-icons (render-unmask-cards (render-cards (render-mask-cards input))))))
 
 (defn wrap-timestamp
   [element timestamp]
