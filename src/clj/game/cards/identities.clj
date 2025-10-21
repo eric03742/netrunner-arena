@@ -1073,7 +1073,7 @@
                               (and (not (:flipped card))
                                    (:accessed-cards runner-reg))
                               (wait-for (gain-credits state :runner 2)
-                                        (system-msg state :runner "gains 2 [Credits] and flips [their] identity to Hoshiko Shiro: Mahou Shoujo")
+                                        (system-msg state :runner "gains 2 [Credits] and flips [their] identity to 白 星子：魔法少女")
                                         (continue-ability state :runner {:effect flip-effect} card nil))
                               :else
                               (effect-completed state side eid)))}
