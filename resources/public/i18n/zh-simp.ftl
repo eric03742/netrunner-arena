@@ -1678,6 +1678,36 @@ sndb_no-account-exist = 邮箱对应的账号不存在
 
 sndb_email_used = 邮箱已被使用
 
+quick_chat-label = 常用短语：
+
+quick_chat-btn-think = 思考
+
+quick_chat-btn-ok = 好的
+
+quick_chat-btn-sorry = 抱歉
+
+quick_chat-btn-undo = 反悔
+
+quick_chat-btn-thank = 感谢
+
+quick_chat-btn-glhf = GLHF
+
+quick_chat-btn-gg = GG
+
+quick_chat-think = 思考一下
+
+quick_chat-ok = 好的
+
+quick_chat-sorry = 抱歉
+
+quick_chat-undo = 我想撤回一下
+
+quick_chat-thank = 谢谢你！
+
+quick_chat-glhf = GL HF
+
+quick_chat-gg = GG
+
 stats_win-method = 胜利方式: {$reason ->
     [Agenda] 议案
     [Claim] 宣称
