@@ -1673,6 +1673,37 @@ sndb_no-account-exist = No account with that email address exists
 
 sndb_email_used = Email already used
 
+
+quick_chat-label = Chat: 
+
+quick_chat-btn-think = Think
+
+quick_chat-btn-ok = OK
+
+quick_chat-btn-sorry = Sorry
+
+quick_chat-btn-undo = Undo
+
+quick_chat-btn-thank = Thank
+
+quick_chat-btn-glhf = GLHF
+
+quick_chat-btn-gg = GG
+
+quick_chat-think = Give me a minute
+
+quick_chat-ok = OK
+
+quick_chat-sorry = Sorry
+
+quick_chat-undo = I want to undo my last action
+
+quick_chat-thank = Thank you very much!
+
+quick_chat-glhf = GL HF
+
+quick_chat-gg = GG
+
 stats_win-method = Win method: {$reason ->
     [Agenda] Agenda
     [Claim] Claim
