@@ -650,7 +650,7 @@ game_timeout-soon = 游戏将在30秒内因不活动而超时
 
 game_trace = 追踪强度
 
-game_trash-like-cards = 提供销毁如卡牌
+game_trash-like-cards = 主动提示销毁同类型卡牌
 
 game_trash-resource = 销毁资源
 
