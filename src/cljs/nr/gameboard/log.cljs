@@ -276,7 +276,6 @@
       (when (or (not-spectator?)
                 (not (:mutespectators @current-game)))
         [:div.log-input
-         [quick-chat-panel]
          [:div.form-container
           [:form {:on-submit #(do (.preventDefault %)
                                   (reset-completions state)
