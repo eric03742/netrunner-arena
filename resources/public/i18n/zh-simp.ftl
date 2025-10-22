@@ -1678,7 +1678,7 @@ sndb_no-account-exist = 邮箱对应的账号不存在
 
 sndb_email_used = 邮箱已被使用
 
-quick_chat-label = 短语:
+quick_chat-label = △
 
 quick_chat-btn-think = 思考
 
