@@ -1674,7 +1674,7 @@ sndb_no-account-exist = No account with that email address exists
 sndb_email_used = Email already used
 
 
-quick_chat-label = Chat: 
+quick_chat-label = △
 
 quick_chat-btn-think = Think
 

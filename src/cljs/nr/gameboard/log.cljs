@@ -73,47 +73,6 @@
     (ws/ws-send! [:game/say {:gameid (current-gameid app-state)
                              :msg s}])))
 
-(defn quick-chat-panel []
-  (when (not-spectator?)
-    [:div
-      [:span [:b (tr [:quick_chat-label "Chat: "])]]
-     
-      [:button.quick-chat {:on-click #(do (.preventDefault %) 
-                          (send-quick-chat (tr [:quick_chat-think "Give me a minute"])))
-                                :key "QuickChat Think"}
-       (tr [:quick_chat-btn-think "Think"])]
-     
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-ok "OK"])))
-                           :key "QuickChat OK"}
-       (tr [:quick_chat-btn-ok "OK"])]
-     
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-sorry "Sorry"])))
-                           :key "QuickChat Sorry"}
-       (tr [:quick_chat-btn-sorry "Sorry"])]
-     
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-undo "I want to undo my last action"])))
-                           :key "QuickChat Undo"}
-       (tr [:quick_chat-btn-undo "Undo"])]
-     
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-thank "Thank you very much!"])))
-                           :key "QuickChat Thank"}
-       (tr [:quick_chat-btn-thank "Thanks"])]
-      
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-glhf "GL HF"])))
-                           :key "QuickChat GLHF"}
-       (tr [:quick_chat-btn-glhf "GL HF"])]
-      [:button.quick-chat {:on-click #(do (.preventDefault %)
-                          (send-quick-chat (tr [:quick_chat-gg "GG"])))
-                           :key "QuickChat GG"}
-       (tr [:quick_chat-btn-gg "GG"])]
-     ]
-    ))
-
 (defn show-decklists []
   (when (get-in @app-state [:current-game :open-decklists])
     [:button.show-decklists {:on-click #(do (.preventDefault %)
@@ -271,14 +230,51 @@
 (defn log-input []
   (let [current-game (r/cursor app-state [:current-game])
         !input-ref (r/atom nil)
-        state (r/atom {})]
+        state (r/atom {})
+        hide-quick-chat (r/atom true)]
     (fn []
       (when (or (not-spectator?)
                 (not (:mutespectators @current-game)))
         [:div.log-input
-         [quick-chat-panel]
+          (when (and (not @hide-quick-chat) (not-spectator?))
+            [:div
+              [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                (send-quick-chat (tr [:quick_chat-think "Give me a minute"])))
+                :key "QuickChat Think"}
+             (tr [:quick_chat-btn-think "Think"])]
+
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-ok "OK"])))
+                                 :key "QuickChat OK"}
+             (tr [:quick_chat-btn-ok "OK"])]
+         
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-sorry "Sorry"])))
+                                 :key "QuickChat Sorry"}
+             (tr [:quick_chat-btn-sorry "Sorry"])]
+         
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-undo "I want to undo my last action"])))
+                                 :key "QuickChat Undo"}
+             (tr [:quick_chat-btn-undo "Undo"])]
+         
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-thank "Thank you very much!"])))
+                                 :key "QuickChat Thank"}
+             (tr [:quick_chat-btn-thank "Thanks"])]
+         
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-glhf "GL HF"])))
+                                 :key "QuickChat GLHF"}
+             (tr [:quick_chat-btn-glhf "GL HF"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-gg "GG"])))
+                                 :key "QuickChat GG"}
+             (tr [:quick_chat-btn-gg "GG"])]]
+          )
          [:div.form-container
-          [:form {:on-submit #(do (.preventDefault %)
+          [:button.quick-chat {:on-click #(swap! hide-quick-chat not)} (tr [:quick_chat-label "△"])]
+          [:form.chat {:on-submit #(do (.preventDefault %)
                                   (reset-completions state)
                                   (send-msg state))}
            [:input#log-input
