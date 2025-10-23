@@ -1690,19 +1690,43 @@ quick_chat-btn-glhf = GLHF
 
 quick_chat-btn-gg = GG
 
-quick_chat-think = Give me a minute
+quick_chat-btn-boss = Boss
+
+quick_chat-btn-afk = AFK
+
+quick_chat-btn-takeout = Takeout
+
+quick_chat-btn-surprise = Surprise
+
+quick_chat-btn-luck = Luck
+
+quick_chat-btn-sad = Sad
+
+quick_chat-think = Give me a minute.
 
 quick_chat-ok = OK
 
-quick_chat-sorry = Sorry
+quick_chat-sorry = Sorry.
 
-quick_chat-undo = I want to undo my last action
+quick_chat-undo = I want to undo my last action.
 
 quick_chat-thank = Thank you very much!
 
 quick_chat-glhf = GL HF
 
 quick_chat-gg = GG
+
+quick_chat-boss = Wait a sec, my boss is coming.
+
+quick_chat-afk = Wait a minute, I have to go number one.
+
+quick_chat-takeout = Sorry, gotta get a takeout.
+
+quick_chat-surprise = Wait what? What is that?
+
+quick_chat-luck = Just lucky.
+
+quick_chat-sad = Can't play anymore!
 
 stats_win-method = Win method: {$reason ->
     [Agenda] Agenda
