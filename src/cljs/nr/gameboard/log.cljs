@@ -270,10 +270,36 @@
             [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
                                                 (send-quick-chat (tr [:quick_chat-gg "GG"])))
                                  :key "QuickChat GG"}
-             (tr [:quick_chat-btn-gg "GG"])]]
+             (tr [:quick_chat-btn-gg "GG"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-afk "Wait a minute, I have to go number one."])))
+                                 :key "QuickChat AFK"}
+             (tr [:quick_chat-btn-afk "AFK"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-boss "Wait a sec, my boss is coming."])))
+                                 :key "QuickChat Boss"}
+             (tr [:quick_chat-btn-boss "Boss"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-takeout "Sorry, gotta get a takeout."])))
+                                 :key "QuickChat Takeout"}
+             (tr [:quick_chat-btn-takeout "Takeout"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-surprise "Wait what? What is that?"])))
+                                 :key "QuickChat Surprise"}
+             (tr [:quick_chat-btn-surprise "Surprise"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-luck "Just lucky."])))
+                                 :key "QuickChat Luck"}
+             (tr [:quick_chat-btn-luck "Luck"])]
+            [:button.quick-chat {:on-click #(do (.preventDefault %) (swap! hide-quick-chat not)
+                                                (send-quick-chat (tr [:quick_chat-sad "Can't play anymore!"])))
+                                 :key "QuickChat Sad"}
+             (tr [:quick_chat-btn-sad "Sad"])]
+            ]
           )
          [:div.form-container
-          [:button.quick-chat {:on-click #(swap! hide-quick-chat not)} (tr [:quick_chat-label "△"])]
+          (when (not-spectator?)
+          [:button.quick-chat {:on-click #(swap! hide-quick-chat not)} (tr [:quick_chat-label "△"])])
           [:form.chat {:on-submit #(do (.preventDefault %)
                                   (reset-completions state)
                                   (send-msg state))}

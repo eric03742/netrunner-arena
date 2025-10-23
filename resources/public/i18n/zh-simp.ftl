@@ -1694,6 +1694,18 @@ quick_chat-btn-glhf = GLHF
 
 quick_chat-btn-gg = GG
 
+quick_chat-btn-boss = 老板
+
+quick_chat-btn-afk = 厕所
+
+quick_chat-btn-takeout = 外卖
+
+quick_chat-btn-surprise = 惊讶
+
+quick_chat-btn-luck = 运气
+
+quick_chat-btn-sad = 沮丧
+
 quick_chat-think = 思考一下
 
 quick_chat-ok = 好的
@@ -1707,6 +1719,18 @@ quick_chat-thank = 谢谢你！
 quick_chat-glhf = GL HF
 
 quick_chat-gg = GG
+
+quick_chat-boss = 等一下，老板来了
+
+quick_chat-afk = 稍等，上个厕所
+
+quick_chat-takeout = 抱歉，拿个外卖
+
+quick_chat-surprise = 啊？这也行？
+
+quick_chat-luck = 运气好
+
+quick_chat-sad = 玩不了啦！
 
 stats_win-method = 胜利方式: {$reason ->
     [Agenda] 议案
