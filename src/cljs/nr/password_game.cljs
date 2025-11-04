@@ -40,6 +40,7 @@
                             :value (:password @state)
                             :placeholder (tr [:lobby_password "Password"])
                             :maxLength "30"
+                            :type "password"
                             :on-key-press (fn [e]
                                             (when (= 13 (.. e -charCode))
                                               (join-game lobby-state state @game @action @request-side)))}]]
