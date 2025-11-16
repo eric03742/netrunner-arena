@@ -32,6 +32,7 @@
          [:div.about.panel.content-page.blue-shade {:ref #(reset! !node-ref %)}
           [tr-element :h3 [:about_about "About"]]
           [tr-element :p [:about_founded-by "This website was founded by @mtgred, an avid Netrunner player from Belgium. The goal is to provide a great way to create and test Netrunner decks online."]]
+          [:p "国服由 " [:a {:href "https://github.com/eric03742" :target "_blank"} "@Eric03742"] " 负责维护"]
           [tr-element :h3 [:about_development "Development"]]
           [tr-element :h4 [:about_software-development-team "Software Development Team"]]
           [:ul.list.compact
@@ -43,6 +44,9 @@
             [linked-person "francescopellegrini" "https://github.com/francescopellegrini"] ": "
             [tr-span [:about_active-contributors "Current active contributors."]]]
             [:li [:a {:href "https://github.com/mtgred/netrunner/graphs/contributors" :target "_blank"} [tr-span [:about_past-contributors "Many past contributors."]]]]]
+          [:h4 "国服开发团队"]
+          [:ul.list.compact
+           [:li "Eric03742: 服务器维护，国服功能开发"]]
 
           [tr-element :h4 [:about_content-creators "Content Creators"]]
           [:ul.list.compact
@@ -90,7 +94,8 @@
           [tr-element :p [:about_donations-long "Donations are appreciated and help finance fast servers. You can support the project financially with PayPal or Bitcoin. Alternate art cards will be enabled on your account as a token of gratitude. Please specify your username with your donation."]]
           [:ul.list.compact
            [:li "PayPal: mtgred@gmail.com or " [:a {:href "https://www.paypal.me/mtgred" :title "PayPal" :target "_blank"} "paypal.me/mtgred"]]
-           [:li "Bitcoin: " [:span.bitcoin "1MRRtCsZYGdgwvRo4NMhmo14q7KJNtAiKL" [:img.qr {:src "/img/bitcoin.png" :alt "Bitcoin QR Code"}]]]]
+           [:li "Bitcoin: " [:span.bitcoin "1MRRtCsZYGdgwvRo4NMhmo14q7KJNtAiKL" [:img.qr {:src "/img/bitcoin.png" :alt "Bitcoin QR Code"}]]]
+           [:li "支持国服开发与维护: " [:span.bitcoin "显示二维码" [:img.qr {:src "/img/wechat_donor.jpg" :alt "微信赞赏码"}]]]]
 
           [tr-element :p [:about_thank-you "Many thanks to all the donors. Your contributions and kind words are greatly appreciated. You help finance fast servers."]]
           [:ul.list.compact
