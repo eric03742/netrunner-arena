@@ -316,7 +316,7 @@
    Language default is computed from browser language when available."
   []
   (into {} (map (fn [{:keys [key default]}]
-                  (if (= key :language)
+                  (if (or (= key :language) (= key :card-language))
                     [key (browser-language)]
                     [key default])))
             all-settings))
