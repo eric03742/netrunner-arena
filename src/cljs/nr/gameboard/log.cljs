@@ -10,7 +10,7 @@
    [nr.gameboard.card-preview :refer [card-preview-mouse-out
                                       card-preview-mouse-over zoom-channel]]
    [nr.gameboard.state :refer [game-state not-spectator?]]
-   [nr.translations :refer [tr]]
+   [nr.translations :refer [tr tr-span]]
    [nr.utils :refer [influence-dot player-highlight-option-class
                      render-message render-player-highlight]]
    [nr.ws :as ws]
@@ -64,7 +64,7 @@
     [:button.indicate-action {:on-click #(do (.preventDefault %)
                                              (send-command "indicate-action"))
                               :key "Indicate action"}
-     (tr [:game_indicate-action "Indicate paid ability"])]))
+     [tr-span [:game_indicate-action "Indicate paid ability"]]]))
 
 (defn send-quick-chat [s]
   (when (and (not (:replay @game-state))
@@ -78,7 +78,7 @@
     [:button.show-decklists {:on-click #(do (.preventDefault %)
                                             (swap! app-state update-in [:display-decklists] not))
                              :key "Show Decklists"}
-     (tr [:game_show-decklists "Show/Hide decklists"])]))
+     [tr-span [:game_show-decklists "Show/Hide decklists"]]]))
 
 (defn fuzzy-match-score
   "Matches if all characters in input appear in target in order.
@@ -305,6 +305,7 @@
                                   (send-msg state))}
            [:input#log-input
             {:placeholder (tr [:chat_placeholder "Say something..."])
+             :data-i18n-key :chat_placeholder
              :type "text"
              :autoComplete "off"
              :ref #(reset! !input-ref %)

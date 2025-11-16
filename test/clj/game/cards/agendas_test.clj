@@ -1366,6 +1366,7 @@
     (play-from-hand state :corp "Tithe" "HQ")
     (is (changed? [(:credit (get-corp)) -4]
           (expend state :corp (find-card "Eminent Domain" (:hand (get-corp))))
+          (click-card state :corp "Eminent Domain") ;; cannot target self - no error
           (click-card state :corp "Pharos")
           (click-prompt state :corp "HQ")
           (is (= "Pharos" (get-title (get-ice state :hq 1))))
@@ -4647,6 +4648,21 @@
       (click-prompts state :corp "2" "Stoke the Embers" "New remote" "Yes" "Stoke the Embers")
       (is (no-prompt? state :corp) "Stoke did not trigger twice")
       (is (= 1 (get-counters (get-content state :remote1 0) :advancement)) "1+0 adv"))))
+
+(deftest stoke-vs-ip-enforcement-double-fire
+  (do-game
+    (new-game {:corp {:hand ["IP Enforcement" "IP Enforcement" "Stoke the Embers"]
+                      :credits 15}
+               :runner {:tags 15}})
+    (play-from-hand state :corp "Stoke the Embers" "New remote")
+    (take-credits state :corp)
+    (run-empty-server state "Server 1")
+    (click-prompt state :runner "Steal")
+    (take-credits state :runner)
+    (play-from-hand state :corp "IP Enforcement")
+    (click-prompts state :corp "2" "Stoke the Embers" "New remote")
+    (click-prompts state :corp "Yes" "Stoke the Embers")
+    (is (no-prompt? state :corp) "No second trigger")))
 
 (deftest stoke-the-embers-reveal-check
   (do-game
