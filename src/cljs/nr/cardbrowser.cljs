@@ -16,7 +16,8 @@
    [nr.utils :refer [banned-span deck-points-card-span faction-icon
                      format->slug get-image-path image-or-face influence-dots
                      non-game-toast render-icons restricted-span rotated-span
-                     set-scroll-top slug->format store-scroll-top]]
+                     set-scroll-top slug->format store-scroll-top
+                     tr-non-game-toast]]
    [reagent.core :as r]))
 
 (defonce cards-channel (chan))
@@ -35,7 +36,7 @@
                   {} (:cards format))))
 
 (go (let [server-version (get-in (<! (GET "/data/cards/version")) [:json :version])
-          lang (get-in @app-state [:options :language] "en")
+          lang (get-in @app-state [:options :card-language] "en")
           local-cards (ls/load "cards" {})
           need-update? (or (not local-cards)
                            (not= server-version (:version local-cards))
@@ -185,7 +186,7 @@
 (defn image-url
   ([card] (image-url card false))
   ([card allow-all-users]
-   (let [lang (get-in @app-state [:options :language] "en")
+   (let [lang (get-in @app-state [:options :card-language] "en")
          res (get-in @app-state [:options :card-resolution] "default")
          art (if (show-alt-art? allow-all-users)
                (get-in @app-state [:options :alt-arts (keyword (:code card))] "stock")
@@ -196,7 +197,7 @@
 (defn- base-image-url
   "The default card image. Displays an alternate image if the card is specified as one."
   [card]
-   (let [lang (get-in @app-state [:options :language] "en")
+   (let [lang (get-in @app-state [:options :card-language] "en")
          res (get-in @app-state [:options :card-resolution] "default")
          art (if (keyword? (:art card)) (:art card) :stock)
          art-index (get card :art-index 0)]
@@ -210,7 +211,7 @@
 
 (defn- card-arts-for-key
   [card key]
-  (let [lang (get-in @app-state [:options :language] "en")
+  (let [lang (get-in @app-state [:options :card-language] "en")
         res (get-in @app-state [:options :card-resolution] "default")]
     (if-let [arts (or (get-in card [:images (keyword lang) (keyword res) key])
                       (get-in card [:images (keyword lang) :default key])
@@ -221,7 +222,7 @@
 
 (defn- expand-alts
   [only-version acc card]
-   (let [lang (get-in @app-state [:options :language] "en")
+   (let [lang (get-in @app-state [:options :card-language] "en")
          res (get-in @app-state [:options :card-resolution] "default")
          alt-versions (remove #{:prev} (map keyword (map :version (:alt-info @app-state))))
          images (select-keys (merge (get-in (:images card) [(keyword lang) :default])
@@ -264,8 +265,8 @@
   (if (= 200 (:status response))
     (let [new-alts (get-in response [:json :altarts] {})]
       (swap! app-state assoc-in [:user :options :alt-arts] new-alts)
-      (non-game-toast (tr [:card-browser_update-success "Updated Art"]) "success" nil))
-    (non-game-toast (tr [:card-browser_update-failure "Failed to Update Art"]) "error" nil)))
+      (tr-non-game-toast [:card-browser_update-success "Updated Art"] "success" nil))
+    (tr-non-game-toast [:card-browser_update-failure "Failed to Update Art"] "error" nil)))
 
 (defn- future-selected-alt-art [card]
   (let [future-code (keyword (:future-version card))
@@ -405,7 +406,7 @@
       (concat runner-factions corp-factions))))
 
 (defn- filter-alt-art-cards [cards]
-  (let [lang (get-in @app-state [:options :language] "en")
+  (let [lang (get-in @app-state [:options :card-language] "en")
         res (get-in @app-state [:options :card-resolution] "default")]
     (filter #(or (not-empty (dissoc (get-in (:images %) [(keyword lang) (keyword res)]) :stock))
                  (contains? % :future-version)
@@ -416,7 +417,7 @@
   (when-let [alt-key (alt-version-from-string setname)]
     (if (= alt-key :prev)
       (filter #(or (contains? % :future-version) (contains? % :previous-versions)) cards)
-      (let [lang (get-in @app-state [:options :language] "en")
+      (let [lang (get-in @app-state [:options :card-language] "en")
             res (get-in @app-state [:options :card-resolution] "default")]
         (filter #(get-in (:images %) [(keyword lang) (keyword res) alt-key]) cards)))))
 
