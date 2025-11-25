@@ -39,7 +39,7 @@
   ([memory] (display-memory memory false))
   ([memory icon?]
    (let [ctrl (stat-controls-for-side :runner)]
-     (fn []
+     (fn [memory]
        (let [{:keys [available used only-for]} memory
              unused (- available used)
              label (if icon? [:<> unused "/" available " " [:span.anr-icon.mu]]
