@@ -44,8 +44,8 @@
         [:audio#ting
          [:source {:src "/sound/ting.mp3" :type "audio/mp3"}]
          [:source {:src "/sound/ting.ogg" :type "audio/ogg"}]]
-        (hiccup/include-js "https://code.jquery.com/jquery-2.1.1.min.js")
-        (hiccup/include-js "https://code.jquery.com/ui/1.13.0/jquery-ui.min.js")
+        (hiccup/include-js "/lib/js/jquery-2.1.1.min.js")
+        (hiccup/include-js "/lib/js/jquery-ui.min.js")
         (hiccup/include-js "/lib/js/bootstrap.min.js")
         (hiccup/include-js "/lib/js/toastr.min.js")
         (hiccup/include-js "/lib/js/jnet-stats.js")
