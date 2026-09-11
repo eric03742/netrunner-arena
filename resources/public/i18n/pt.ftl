@@ -535,7 +535,6 @@ lobby_title-error = Por favor insira o titulo do jogo.
 lobby_too-little-data = Falta de dados
 
 lobby_type = {$type ->
-    [angel-arena] undefined
     [casual] Casual
     [competitive] Competitivo
     [tournament] Torneio
@@ -668,10 +667,6 @@ settings_enter-valid = Por favor, insira um endereço de email válido
 settings_ffg = FFG
 
 settings_game-stats = Estatísticas de Vitória/Derrota em Jogo
-
-settings_get-log-top = Puxando topo do log atual
-
-settings_get-log-width = Puxando largura atual do log
 
 settings_high-res = Habilitar imagem das cartas em alta resolução
 

@@ -646,7 +646,7 @@
       (click-prompt state :corp "No")
       (is (changed? [(:credit (get-runner)) -4]
             (auto-pump-and-break state unity)
-            (core/process-action "continue" state :corp nil))
+            (do-action "continue" state :corp nil))
           "spent 4 to break")
       (run-jack-out state)
       (run-on state :hq)
@@ -1660,7 +1660,7 @@
       (run-continue state)
       (is (changed? [(count (:discard (get-runner))) +4]
             (auto-pump-and-break state corroder)
-            (core/process-action "continue" state :corp nil)
+            (do-action "continue" state :corp nil)
             (click-prompt state :runner "Yes")
             (run-jack-out state))
           "milled 4 with Chiyashi (2 + 2, ice trashed before third mill)")
@@ -1668,14 +1668,14 @@
       (run-continue state)
       (is (changed? [(count (:discard (get-runner))) +7]
             (auto-pump-and-break state crypsis)
-            (core/process-action "continue" state :corp nil)
+            (do-action "continue" state :corp nil)
             (run-jack-out state))
           "milled 6 with Chiyashi, and trashed crypsis")
       (run-on state "R&D")
       (run-continue state)
       (is (changed? [(count (:discard (get-runner))) 0]
             (auto-pump-and-break state corroder)
-            (core/process-action "continue" state :corp nil)
+            (do-action "continue" state :corp nil)
             (run-jack-out state))
           "milled 0 with Chiyashi, no AI is installed"))))
 
@@ -1737,7 +1737,7 @@
       (is (= 3 (get-strength (refresh icewall))) "Ice Wall now at 3 strength")
       (is (= 2 (get-strength (refresh enigma))) "Enigma stays at 2 strength before encounter")
       (auto-pump-and-break state corroder)
-      (core/process-action "continue" state :corp nil)
+      (do-action "continue" state :corp nil)
       (run-continue-until state :encounter-ice enigma)
       (is (= 2 (get-strength (refresh enigma))) "Enigma stays at 2 strength during encounter")
       (run-continue state :movement)
@@ -1783,7 +1783,7 @@
       (run-continue state)
       (auto-pump-and-break state corroder)
       (is (changed? [(count (:hand (get-runner))) 0]
-            (core/process-action "continue" state :corp nil))
+            (do-action "continue" state :corp nil))
           "No Damage from Ice Wall ending the run"))))
 
 (deftest cloud-eater
@@ -7189,7 +7189,7 @@
       (is (= 4 (get-strength (refresh sab))) "+2 strength for 2 pieces of ice")
       (play-from-hand state :corp "Ice Wall" "HQ")
       (is (= 5 (get-strength (refresh sab))) "+3 strength for 3 pieces of ice")
-      (core/process-action "move" state :corp {:card (get-ice state :hq 1) :server "Archives"})
+      (do-action "move" state :corp {:card (get-ice state :hq 1) :server "Archives"})
       (is (= 4 (get-strength (refresh sab))) "+2 strength for 2 pieces of ice"))))
 
 (deftest self-adapting-code-wall
@@ -7820,7 +7820,7 @@
       (click-prompt state :corp "0")
       (click-prompt state :runner "6")
       (is (= 2 (count-tags state)) "Runner did not take tags from Surveyor Trace 6 with boost 6")
-      (core/process-action "move" state :corp {:card (get-ice state :hq 1) :server "Archives"})
+      (do-action "move" state :corp {:card (get-ice state :hq 1) :server "Archives"})
       (is (= 4 (get-strength (refresh surv))) "Surveyor has 4 strength for 2 pieces of ice"))))
 
 (deftest surveyor-x-fn-test

@@ -56,7 +56,7 @@
     (= (take 2 zone) [:servers :archives]) "the root of Archives"
     :else (zone->name (second zone)))))
 
-(defn zone->sort-key
+(defn zone->sort-key-impl
   [zone]
   (case (if (keyword? zone) zone (last zone))
     :archives -3
@@ -64,10 +64,11 @@
     :hq -1
     (string->num
       (last (safe-split (str zone) #":remote")))))
+(def zone->sort-key (memoize zone->sort-key-impl))
 
 (defn zones->sorted-names
   [zones]
-  (->> zones (sort-by zone->sort-key) (map zone->name)))
+  (->> zones (sort-by zone->sort-key) (mapv zone->name)))
 
 (defn is-remote?
   "Returns true if the zone is for a remote server"

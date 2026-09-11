@@ -69,7 +69,7 @@
   (do-game
     (new-game {:corp {:hand ["Ice Wall"]}})
     (play-from-hand state :corp "Ice Wall" "HQ")
-    (core/process-action "trash" state :corp {:card (get-ice state :hq 0)})
+    (do-action "trash" state :corp {:card (get-ice state :hq 0)})
     (is (= 1 (count (:discard (get-corp)))) "trashed")
     (is (last-log-contains? state "trashes "))))
 

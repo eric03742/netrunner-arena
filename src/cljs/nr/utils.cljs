@@ -122,6 +122,12 @@
          msg (rdom-server/render-to-string (tr-span tr-vec tr-params))]
      (f msg))))
 
+(defn scroll-to-bottom!
+  "Scrolls an element to the bottom of its content. Does nothing when el is nil."
+  [el]
+  (when el
+    (set! (.-scrollTop el) (.-scrollHeight el))))
+
 (defn map-longest
   [f default & colls]
   (lazy-seq
@@ -469,6 +475,15 @@
    (if cond
      [:button (merge {:on-click f :key text} attrs) text]
      [:button.disabled (merge {:key text} attrs) text])))
+
+(defn precon-decklist-links
+  "Links to the published decklists of a precon matchup, when it has them"
+  [{:keys [corp runner]}]
+  (when (and (:decklist corp) (:decklist runner))
+    [:span
+     [:a {:href (:decklist corp) :target "_blank"} (:name corp)]
+     " vs. "
+     [:a {:href (:decklist runner) :target "_blank"} (:name runner)]]))
 
 (defn checkbox-button [on-text off-text on-cond f]
   (if on-cond

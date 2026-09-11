@@ -8507,7 +8507,7 @@
         (is (= 1 (get-strength (refresh snow))) "Snowball starts at 1 strength")
         (auto-pump-and-break state (refresh snow))
         (is (= 5 (get-strength (refresh snow))) "Snowball was pumped once and gained 3 strength from breaking")
-        (core/process-action "continue" state :corp nil)
+        (do-action "continue" state :corp nil)
         (is (= 4 (get-strength (refresh snow))) "+3 until-end-of-run strength"))))
 
 (deftest stargate

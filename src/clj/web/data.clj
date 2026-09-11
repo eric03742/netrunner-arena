@@ -1,11 +1,12 @@
 (ns web.data
-  (:require [web.utils :refer [response cached-response mongo-time-to-utc-string]]
-            [web.versions :refer [frontend-version]]
-            [monger.collection :as mc]
-            [jinteki.i18n :as i18n]
-            [monger.query :as mq]
-            [game.core.initializing :refer [card-implemented]]
-            [clojure.edn :as edn]))
+  (:require
+   [clojure.edn :as edn]
+   [game.core.initializing :refer [card-implemented]]
+   [jinteki.i18n :as i18n]
+   [monger.collection :as mc]
+   [monger.query :as mq]
+   [web.utils :refer [cached-response mongo-time-to-utc-string response]]
+   [web.versions :refer [cards-version frontend-version]]))
 
 (defn news-handler [{db :system/db}]
   (let [data (mq/with-collection db (.getCollection db "news")
@@ -15,16 +16,13 @@
         data (mapv #(update % :date mongo-time-to-utc-string) data)]
     (response 200 data)))
 
-(defn- cards-version [db]
-  (:cards-version (mc/find-one-as-map db "config" nil)))
-
 (defn- enriched-cards [db]
   (let [cards (mc/find-maps db "cards")]
     (mapv #(-> % (assoc :implementation (card-implemented %)) (dissoc :_id)) cards)))
 
 (defn cards-handler [{db :system/db :as request}]
   (cached-response request
-                   (str @frontend-version "-" (cards-version db))
+                   (str @frontend-version "-" @cards-version)
                    #(enriched-cards db)))
 
 (defn- validate-lang
@@ -39,7 +37,7 @@
                  ; else
                  (str "cards-" lang))]
       (cached-response request
-                       (str @frontend-version "-" (cards-version db) "-" lang)
+                       (str @frontend-version "-" @cards-version "-" lang)
                        #(mapv (fn [card] (dissoc card :_id)) (mc/find-maps db coll))))
     (response 200 {})))
 

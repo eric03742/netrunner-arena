@@ -23,16 +23,16 @@
     (testing "Non-damage costs aren't reordered"
       (is (not= [(->c :credit 1) (->c :click 1)] (core/merge-costs [[(->c :click 1) (->c :credit 1)]]))))
     (testing "Costs with all defaults are expanded"
-      (is (= [(->c :click 1) (->c :credit 1)] (core/merge-costs [(->c :click) (->c :credit)]))))
+      (is (= [(->c :click 1) (->c :credit 1)] (core/merge-costs [(->c :click) nil (->c :credit)]))))
     (testing "Non-damage costs are combined"
       (is (= [(->c :click 4) (->c :credit 2)]
              (core/merge-costs [(->c :click 1) [(->c :click 3)] (->c :credit 1) (->c :credit 1)]))))
     (testing "Deeply nested costs are flattened"
-      (is (= [(->c :click 3)] (core/merge-costs [[[[[(->c :click 1)]]] [[[[[(->c :click 1)]]]]]] (->c :click 1)]))))
-    (testing "Empty costs return an empty list"
-      (is (= '() (core/merge-costs []))))
-    (testing "nil costs return an empty list"
-      (is (= '() (core/merge-costs nil))))
+      (is (= [(->c :click 3)] (core/merge-costs [[[[[(->c :click 1)]] nil] [[[[[(->c :click 1)]]]]]] (->c :click 1)]))))
+    (testing "Empty costs return an empty vec"
+      (is (= [] (core/merge-costs []))))
+    (testing "nil costs return an empty vec"
+      (is (= [] (core/merge-costs nil))))
     (testing "Stealth credits are totaled correctly"
       (is (= [(->c :credit 5 {:stealth 2})]
              (core/merge-costs [(->c :credit 3 {:stealth 1}) (->c :credit 2 {:stealth 1})])))))

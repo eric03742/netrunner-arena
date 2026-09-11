@@ -237,6 +237,8 @@ deck-builder_decklist = 牌表
 
 deck-builder_decklist-inst = （在此输入或粘贴牌表，系统会自动解析）
 
+deck-builder_default = 默认牌组
+
 deck-builder_delete = 删除
 
 deck-builder_delete-selected = 删除所选
@@ -297,15 +299,21 @@ deck-builder_notes = 备注
 
 deck-builder_reset = 重置
 
+deck-builder_sort = 排序:
+
 deck-builder_save = 保存
 
 deck-builder_select-all = 选择全部
+
+deck-builder_set-default = 设为默认
 
 deck-builder_show-credit-cost = 显示信用点费用
 
 deck-builder_show-memory-cost = 显示内存费用
 
 deck-builder_unselect-all = 取消选择全部
+
+deck-builder_unset-default = 取消设为默认
 
 deck-builder_view-options = 查看选项
 
@@ -496,6 +504,16 @@ format_name = {$format ->
     *[other] 未知赛制 ({$format})
 }
 
+sort_order_name = {$sort ->
+    [date-newest] 日期 (最新)
+    [date-oldest] 日期 (最旧)
+    [name-az] 名称 (A-Z)
+    [name-za] 名称 (Z-A)
+    [win-rate] 胜率
+    [games-played] 游戏次数
+    *[other] {$sort}
+}
+
 game_abilities = 能力
 
 game_actions = 操作
@@ -537,6 +555,8 @@ game_card-count = {$cnt ->
     *[other] {$cnt}张卡牌
 }
 
+game_chat-messages = 消息
+
 game_click-count = {$click ->
     [one] {$click} 时点
     *[other] {$click} 时点
@@ -545,6 +565,8 @@ game_click-count = {$click ->
 game_close = 关闭
 
 game_close-shuffle = 关闭并洗牌
+
+game_command-menu = 命令
 
 game_concede = 投降
 
@@ -965,7 +987,7 @@ lobby_corp-perspective = 公司视角
 
 lobby_create = 创建
 
-lobby_creation-paused = Game creation is currently paused for maintenance. Please try again later.
+lobby_creation-paused = 游戏创建当前因维护而暂停。请稍后再试。
 
 lobby_deck-selected = 牌组已选择
 
@@ -1054,6 +1076,14 @@ lobby_replay-invalid-file = 请选择有效的录像文件。
 
 lobby_replay-link-error = 录像链接无效。
 
+lobby_replay-restoration = 录像恢复
+
+lobby_replay_restoration_beta = BETA功能：此大厅将尝试在录像中以选定的游戏状态启动游戏。
+
+lobby_replay_restoration_deck_selection = 你需要选择录像中使用的确切牌组。
+
+lobby_replay_restoration_explanation = 此功能无法完全恢复游戏状态。预计某些功能会被破坏，需要手动修复。特别是某些触发上下文（例如，潜袭者是否完成了最后一次潜袭，卡牌是否被丢弃，…）将丢失。
+
 lobby_reset = 重置房间名
 
 lobby_runner-perspective = 潜袭者视角
@@ -1067,6 +1097,8 @@ lobby_save-replay-details = 这将保存此游戏的回放文件，其中包含�
 lobby_save-replay-unshared = 只会保留你最近的15个未分享游戏，因此请务必在之后下载或分享游戏。
 
 lobby_select-deck = 选择牌组
+
+lobby_select-default-deck = 选择默认牌组
 
 lobby_select-error = 不能选择那个牌组
 
@@ -1117,7 +1149,6 @@ lobby_too-little-data = 数据不足
 lobby_tournament = 锦标赛
 
 lobby_type = {$type ->
-    [angel-arena] 天使竞技场
     [casual] 休闲
     [competitive] 竞技
     [join] 加入
@@ -1149,11 +1180,15 @@ menu_admin = 网站管理员
 
 menu_donor = 捐赠人
 
+menu_login = 登录
+
 menu_logout = 退出
 
 menu_moderator = 管理员
 
 menu_settings = {nav_settings}
+
+menu_signup = 注册
 
 nav_about = 关于
 
@@ -1189,6 +1224,12 @@ nav_tournaments = 比赛
 nav_users = 用户
 
 nav_welcome = 欢迎
+
+nav_zoom-in = 放大
+
+nav_zoom-out = 缩小
+
+nav_zoom-reset = 重置缩放
 
 new-game_default = 无特殊条件
 
@@ -1403,6 +1444,8 @@ pronouns = {$pronoun ->
 
 replay_share-timestamp = 分享时间戳
 
+replay_start-new-game = 于此时开始新游戏
+
 set_name = {$name ->
     [a23-seconds] 二十三秒
     [a-study-in-static] 静态研究
@@ -1549,6 +1592,10 @@ settings_api-keys-not-updated = 更新API密钥失败
 
 settings_api-keys-updated = 更新API密钥
 
+settings_auto-select-default-deck-casual = 在休闲游戏中自动选择默认牌组
+
+settings_auto-select-default-deck-tournament = 在锦标赛游戏中自动选择默认牌组
+
 settings_avatar = 头像
 
 settings_background = 游戏背景
@@ -1597,7 +1644,31 @@ settings_card-backs-their-choice = 对手选择
 
 settings_card-backs-tip = 通过在选定的在线锦标赛中获得高名次，你可以获得更多的牌背。如果你是一位艺术家，有认为适合做牌背的艺术作品，请随时联系我们
 
-settings_card-iamge = 卡牌图像
+settings_card-unplayable-fade-out = 淡出不可打出的卡牌
+
+settings_card-hover-movement = 手牌中可响应卡牌
+
+settings_card-colors = 卡牌状态颜色
+
+settings_card-colors-colorblind = 色盲友好 (Okabe-Ito 调色盘)
+
+settings_card-colors-custom = 自定义
+
+settings_card-colors-default = 默认
+
+settings_card-colors-encountered = 遭遇防火墙
+
+settings_card-colors-help = 对卡片周围的光晕重新着色，以便更容易区分状态。选择一个色盲友好的预设或设置自己的颜色。
+
+settings_card-colors-hovered = 悬停
+
+settings_card-colors-poison = 档案库中的毒药/议案
+
+settings_card-colors-selectable = 可选择/可打出
+
+settings_card-colors-selected = 已选择
+
+settings_card-image = 卡牌图像
 
 settings_card-images = 卡牌图像
 
@@ -1611,7 +1682,9 @@ settings_change-avatar = 在WeAvatar上更换
 
 settings_change-email = 更换电子邮箱
 
-settings_comp-only = 仅竞技厅
+settings_chat-messages-note = 这些消息是从聊天输入下方的“消息”菜单在游戏中发送的。
+
+settings_comp-only = 仅限竞技大厅
 
 settings_connection = 连接
 
@@ -1624,6 +1697,14 @@ settings_create-api-key = 创建API密钥
 settings_current-email = 旧邮箱
 
 settings_deck-stats = 牌组统计
+
+settings_default-game-description = 在休闲游戏中的默认游戏描述
+
+settings_default-password = 默认游戏对局密码
+
+settings_default-password-protect-casual = 在休闲游戏中的默认密码保护
+
+settings_default-save-replay = 在休闲游戏中默认保存回放
 
 settings_delete-api-key = 删除
 
@@ -1655,11 +1736,9 @@ settings_game-stats = 对战胜负统计
 
 settings_gameplay-settings = 游戏设置
 
-settings_get-log-top = 获取当前日志框顶部坐标
-
-settings_get-log-width = 获取当前日志框宽度
-
 settings_ghost-trojans = 对于被负载的程序显示鬼影
+
+settings_tactile-cards = 触摸卡牌
 
 settings_high-res = 启用高分辨率卡牌图像
 
@@ -1679,13 +1758,13 @@ settings_layout-device = 设备布局
 
 settings_layout-options = 布局选项
 
+settings_game-settings = 游戏设置
+
 settings_log-player-highlight = 日志玩家高亮
 
 settings_log-player-highlight-none = 无
 
 settings_log-player-highlight-red-blue = 公司：蓝色 / 潜袭者：红色
-
-settings_log-size = 日志栏尺寸
 
 settings_log-timestamps = 日志时间戳
 
@@ -1694,6 +1773,8 @@ settings_none = 关闭
 settings_nsg = NSG
 
 settings_pass-on-rez = 激活防火墙时让过优先权
+
+settings_pin-base-art = 缩放卡牌不使用异画
 
 settings_pin-zoom = 在屏幕上保持缩放卡牌
 
@@ -1746,6 +1827,8 @@ settings_updating = 设置保存中……
 settings_user-name = 用户名
 
 settings_volume = 音量
+
+settings_zoom-last-played-or-rezzed = 缩放最近激活或打出卡牌
 
 side_name = {$side ->
     [all] 全部

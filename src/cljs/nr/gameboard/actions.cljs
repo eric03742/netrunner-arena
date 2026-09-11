@@ -2,7 +2,6 @@
   (:require
    [differ.core :as differ]
    [goog.functions :as gfn]
-   [nr.angel-arena.lobby :as angel-arena]
    [nr.appstate :refer [app-state current-gameid]]
    [nr.gameboard.card-preview :refer [put-game-card-in-channel zoom-channel]]
    [nr.gameboard.replay :refer [init-replay]]
@@ -76,7 +75,7 @@
 (declare toast)
 (defn handle-timeout [gameid]
   (when (= gameid (current-gameid app-state))
-    (toast [:game_inactivity "Game closed due to inactivity"]) "error" {:time-out 0 :close-button true}
+    (toast [:game_inactivity "Game closed due to inactivity"] "error" {:time-out 0 :close-button true})
     (leave-game!)))
 
 (defn handle-timeout-soon [gameid]
@@ -95,7 +94,6 @@
   (reset! ws/lock false))
 
 (defmethod ws/event-msg-handler :game/start [{data :?data}]
-  (reset! angel-arena/queueing false)
   (launch-game! (parse-state data)))
 (defmethod ws/event-msg-handler :game/resync [{data :?data}] (reset-game! (parse-state data)))
 (defmethod ws/event-msg-handler :game/diff [{data :?data}] (handle-diff! (parse-state data)))
