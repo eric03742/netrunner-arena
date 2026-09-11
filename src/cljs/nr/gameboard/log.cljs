@@ -3,7 +3,6 @@
    [clojure.string :as string]
    [jinteki.utils :refer [command-info]]
    [jinteki.cards :refer [all-cards]]
-   [nr.angel-arena.log :as angel-arena-log]
    [nr.appstate :refer [app-state current-gameid]]
    [nr.avatar :refer [avatar]]
    [nr.gameboard.actions :refer [send-command]]
@@ -11,8 +10,8 @@
                                       card-preview-mouse-over zoom-channel]]
    [nr.gameboard.state :refer [game-state not-spectator?]]
    [nr.translations :refer [tr tr-span]]
-   [nr.utils :refer [influence-dot player-highlight-option-class
-                     render-message render-player-highlight]]
+   [nr.utils :refer [player-highlight-option-class render-message render-system-message
+                     scroll-to-bottom!]]
    [nr.ws :as ws]
    [reagent.core :as r]
    [reagent.dom :as rdom]))
@@ -29,21 +28,12 @@
   [el tolerance]
   (> tolerance (- (.-scrollHeight el) (.-scrollTop el) (.-clientHeight el))))
 
-(def should-scroll (r/atom {:update true :send-msg false}))
-
-(defn log-typing []
-  (r/with-let [typing (r/cursor game-state [:typing])]
-    (when @typing
-      [:div [:p.typing
-             (doall
-               (for [i (range 10)]
-                 ^{:key i}
-                 [:span " " influence-dot " "]))]])))
+(def pinned-to-bottom? (r/atom true))
 
 (defn send-text [text]
   (when (and (not (:replay @game-state))
              (seq text))
-    (reset! should-scroll {:update false :send-msg true})
+    (reset! pinned-to-bottom? true)
     (ws/ws-send! [:game/say {:gameid (current-gameid app-state)
                              :msg text}])))
 
@@ -52,19 +42,6 @@
     (when (seq text)
       (send-text text)
       (swap! s assoc :msg ""))))
-
-(defn send-typing
-  "Send a typing event to server for this user if it is not already set in game state AND user is not a spectator"
-  [s]
-  (r/with-let [typing (r/cursor game-state [:typing])]
-    (let [typing? (boolean (seq (:msg @s)))]
-      (when (and (not (:replay @game-state))
-                 ;; only send if the typing state is different
-                 (or (and (not @typing) typing?)
-                     (and (not typing?) @typing))
-                 (not-spectator?))
-        (ws/ws-send! [:game/typing {:gameid (current-gameid app-state)
-                                    :typing typing?}])))))
 
 (defn indicate-action []
   (when (not-spectator?)
@@ -76,7 +53,7 @@
 (defn send-quick-chat [s]
   (when (and (not (:replay @game-state))
              (seq s))
-    (reset! should-scroll {:update false :send-msg true})
+    (reset! pinned-to-bottom? true)
     (ws/ws-send! [:game/say {:gameid (current-gameid app-state)
                              :msg s}])))
 
@@ -241,7 +218,6 @@
       (= "/" (first input)) (complete-command state input))
      
     (swap! state assoc :msg input)))
-  ;;(send-typing state)
 
 (defn completions [!input-ref state]
   (when (show-completions? @state)
@@ -375,7 +351,6 @@
              :autoComplete "off"
              :ref #(reset! !input-ref %)
              :value (:msg @state)
-             ;;:on-blur #(send-typing (atom nil))
              :on-key-down #(completions-key-down-handler state %)
              :on-change #(log-input-change-handler state %)}]]]
          [:div.log-actions
@@ -385,12 +360,13 @@
          [show-decklists]
          [completions !input-ref state]]))))
 
-(defn format-system-timestamp [timestamp text corp runner]
-  (if (get-in @app-state [:options :log-timestamps])
-    (render-message (render-player-highlight text corp runner (str "[" (string/replace (.toLocaleTimeString (js/Date. timestamp)) #"\s\w*" "") "]")))
-    (render-message (render-player-highlight text corp runner))
-    )
-  )
+(defn format-system-timestamp [timestamp message corp runner]
+  (render-system-message
+    message corp runner
+    (when (get-in @app-state [:options :log-timestamps])
+      (str "["
+           (string/replace (.toLocaleTimeString (js/Date. timestamp)) #"\s\w*" "")
+           "]"))))
 
 (defn format-user-timestamp [timestamp user]
   (if (get-in @app-state [:options :log-timestamps])
@@ -406,55 +382,58 @@
   (let [log (r/cursor game-state [:log])
         corp (r/cursor game-state [:corp :user :username])
         runner (r/cursor game-state [:runner :user :username])
-        !node-ref (r/atom nil)]
+        !node-ref (r/atom nil)
+        !msg-count (atom 0)]
     (r/create-class
       {:display-name "log-messages"
 
        :component-did-mount
        (fn [_]
-         (when (:update @should-scroll)
-           (when-let [n @!node-ref]
-             (set! (.-scrollTop n) (.-scrollHeight n)))))
-
-       :component-will-update
-       (fn [_]
-         (when-let [n @!node-ref]
-           (reset! should-scroll {:update (or (:send-msg @should-scroll)
-                                              (scrolled-to-end? n 15))
-                                  :send-msg false})))
+         (reset! pinned-to-bottom? true)
+         (reset! !msg-count (count @log))
+         (scroll-to-bottom! @!node-ref))
 
        :component-did-update
        (fn [_]
-         (when (:update @should-scroll)
-           (when-let [n @!node-ref]
-             (set! (.-scrollTop n) (.-scrollHeight n)))))
+         (let [msg-count (count @log)]
+           (when (and @pinned-to-bottom?
+                      (not= msg-count @!msg-count))
+             (scroll-to-bottom! @!node-ref))
+           (reset! !msg-count msg-count)))
 
        :reagent-render
        (fn []
-         (into [:div.messages {:class [(when (:replay @game-state)
-                                         "panel-bottom")
-                                       (player-highlight-option-class)]
-                               :ref #(reset! !node-ref %)
-                               :on-mouse-over #(card-preview-mouse-over % zoom-channel)
-                               :on-mouse-out #(card-preview-mouse-out % zoom-channel)
-                               :aria-live "polite"}]
-               (map
-                 (fn [{:keys [user text timestamp]}]
-                   ^{:key timestamp}
-                   (if (= user "__system__")
-                      [:div.system
-                        [format-system-timestamp timestamp text @corp @runner]]
-                      [:div.message
-                       [avatar user {:opts {:size 38}}]
-                       [:div.content
-                        [format-user-timestamp timestamp user]
-                        [:div (render-message text)]]]))
-                 @log)))})))
+         [:div.log-scroll-to-bottom-wrapper
+          (into [:div.messages {:class [(when (:replay @game-state)
+                                          "panel-bottom")
+                                        (player-highlight-option-class)]
+                                :ref #(reset! !node-ref %)
+                                :on-scroll #(reset! pinned-to-bottom? (scrolled-to-end? (.-currentTarget %) 15))
+                                :on-mouse-over #(card-preview-mouse-over % zoom-channel)
+                                :on-mouse-out #(card-preview-mouse-out % zoom-channel)
+                                :aria-live "polite"}]
+                (map
+                  (fn [{:keys [user text timestamp] :as message}]
+                    ^{:key timestamp}
+                    (if (= user "__system__")
+                       [:div.system
+                         [format-system-timestamp timestamp message @corp @runner]]
+                       [:div.message
+                        [avatar user {:opts {:size 38}}]
+                        [:div.content
+                         [format-user-timestamp timestamp user]
+                         [:div (render-message text)]]]))
+                  @log))
+          (when-not @pinned-to-bottom?
+            [:button.log-scroll-to-bottom
+             {:on-click #(do (scroll-to-bottom! @!node-ref)
+                             (reset! pinned-to-bottom? true))
+              :title "Scroll to bottom"
+              :aria-label "Scroll to bottom"}
+             "↓"])])})))
 
 (defn log-pane []
   (fn []
     [:div.log
-     ;; [angel-arena-log/inactivity-pane]
      [log-messages]
-     [log-typing]
      [log-input]]))

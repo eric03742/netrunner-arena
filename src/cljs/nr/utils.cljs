@@ -122,6 +122,12 @@
          msg (rdom-server/render-to-string (tr-span tr-vec tr-params))]
      (f msg))))
 
+(defn scroll-to-bottom!
+  "Scrolls an element to the bottom of its content. Does nothing when el is nil."
+  [el]
+  (when el
+    (set! (.-scrollTop el) (.-scrollHeight el))))
+
 (defn map-longest
   [f default & colls]
   (lazy-seq
@@ -409,6 +415,42 @@
   ([message corp runner timestamp]
   (render-input message (player-highlight-patterns corp runner timestamp))))
 
+(defn- render-username [username corp runner]
+  [:span
+   {:class (cond
+             (= username corp) "corp-username"
+             (= username runner) "runner-username"
+             :else "username")}
+   username])
+
+(defn render-message-parts [parts corp runner timestamp]
+  (let [timestamp-index
+        (first
+          (keep-indexed
+            (fn [i part]
+              (when (map? part) i))
+            parts))]
+    (into
+      [:<>]
+      (map-indexed
+        (fn [i part]
+          (set-react-key
+            i
+            (cond
+              (string? part) (render-message part)
+              (:spectator part) [:span (:username part)]
+              :else
+              (wrap-timestamp
+                (render-username (:username part) corp runner)
+                (when (= i timestamp-index) timestamp)))))
+        parts))))
+
+(defn render-system-message [message corp runner timestamp]
+  (if-let [parts (:parts message)]
+    (render-message-parts parts corp runner timestamp)
+    (render-message
+      (render-player-highlight (:text message) corp runner timestamp))))
+
 (defn player-highlight-option-class []
   (when (= "blue-red" (get-in @app-state [:options :log-player-highlight]))
     "log-player-highlight-red-blue"))
@@ -433,6 +475,15 @@
    (if cond
      [:button (merge {:on-click f :key text} attrs) text]
      [:button.disabled (merge {:key text} attrs) text])))
+
+(defn precon-decklist-links
+  "Links to the published decklists of a precon matchup, when it has them"
+  [{:keys [corp runner]}]
+  (when (and (:decklist corp) (:decklist runner))
+    [:span
+     [:a {:href (:decklist corp) :target "_blank"} (:name corp)]
+     " vs. "
+     [:a {:href (:decklist runner) :target "_blank"} (:name runner)]]))
 
 (defn checkbox-button [on-text off-text on-cond f]
   (if on-cond

@@ -137,34 +137,6 @@
     (doseq [card (vals @all-cards)]
       (update-card-art card art lang res s))))
 
-(defn log-width-option [s]
-  (let [log-width (r/atom (:log-width @s))]
-    (fn []
-      [:div
-       [:input {:type "number"
-                :min 100 :max 2000
-                :on-change #(do (swap! s assoc :log-width (.. % -target -value))
-                                (reset! log-width (.. % -target -value)))
-                :value @log-width}]
-       [:button.update-log-width {:type "button"
-                                  :on-click #(do (swap! s assoc :log-width (get-in @app-state [:options :log-width]))
-                                                 (reset! log-width (get-in @app-state [:options :log-width])))}
-        [tr-span [:settings_get-log-width "Get current log width"]]]])))
-
-(defn log-top-option [s]
-  (let [log-top (r/atom (:log-top @s))]
-    (fn []
-      [:div
-       [:input {:type "number"
-                :min 100 :max 2000
-                :on-change #(do (swap! s assoc :log-top (.. % -target -value))
-                                (reset! log-top (.. % -target -value)))
-                :value @log-top}]
-       [:button.update-log-width {:type "button"
-                                  :on-click #(do (swap! s assoc :log-top (get-in @app-state [:options :log-top]))
-                                                 (reset! log-top (get-in @app-state [:options :log-top])))}
-        [tr-span [:settings_get-log-top "Get current log top"]]]])))
-
 (defn change-email [_]
   (let [email-state (r/atom {:flash-message ""
                              :email ""})]
@@ -379,7 +351,7 @@
                                  :on-change #(let [checked (.. % -target -checked)]
                                                (when checked
                                                  (play-sfx [(select-random-from-grouping grouping)]
-                                                           {:volume (or (:sounds-volume @s) 50)
+                                                           {:volume (:sounds-volume @s)
                                                             :force true}))
                                                (swap! s assoc-in [:bespoke-sounds grouping] checked))}]
                  [tr-span [:settings_bespoke-sounds group-name] {:sound group-name}]]]))]
@@ -452,7 +424,7 @@
                ^{:key i}
                [:div
                 [:input {:type "text"
-                         :maxLength "100"
+                         :maxLength settings/chat-message-max-length
                          :style {:width "50%"}
                          :value (get-in @s [:chat-messages i] "")
                          :on-change #(swap! s assoc-in [:chat-messages i] (.. % -target -value))}]]))]
@@ -532,7 +504,22 @@
                               :value "none"
                               :checked (= "none" (:log-player-highlight @s))
                               :on-change #(swap! s assoc :log-player-highlight (.. % -target -value))}]
-              [tr-span [:settings_log-player-highlight-none "None"]]]]]]
+              [tr-span [:settings_log-player-highlight-none "None"]]]]]
+           [:br]
+           [tr-element :h4 [:settings_tactile-cards "Tactile cards"]]
+           [:div
+            [:div
+              [:label [:input {:type "checkbox"
+                               :value true
+                               :checked (:card-unplayable-fade-out @s)
+                               :on-change #(swap! s assoc :card-unplayable-fade-out (.. % -target -checked))}]
+              [tr-span [:settings_card-unplayable-fade-out "Fade out unplayable cards"]]]]
+            [:div
+              [:label [:input {:type "checkbox"
+                               :value true
+                               :checked (:card-hover-movement @s)
+                               :on-change #(swap! s assoc :card-hover-movement (.. % -target -checked))}]
+              [tr-span [:settings_card-hover-movement "Responsive cards in hand"]]]]]]
 
           (let [custom-bg-selected (= (:background @s) "custom-bg" )
                 custom-bg-url (r/cursor s [:custom-bg-url])]
@@ -778,7 +765,7 @@
                     :min 1 :max 100 :step 1
                     :on-mouse-up #(play-sfx [(random-sound)] {:volume (int (.. % -target -value))})
                     :on-change #(swap! s assoc :sounds-volume (.. % -target -value))
-                    :value (or (:sounds-volume @s) 50)
+                    :value (:sounds-volume @s)
                     :disabled (not (or (:sounds @s) (:lobby-sounds @s)))}]]
 
           [tr-element :h4 [:settings_layout-device "Device Layout"]]
@@ -808,11 +795,6 @@
                             :on-change #(swap! s assoc :labeled-unrezzed-cards (.. % -target -checked))}]
             [tr-span [:settings_label-unrezzed-cards "Label unrezzed cards"]]]]
 
-          [tr-element :h4 [:settings_log-size "Log size"]]
-          [:div
-           [log-width-option s]
-           [log-top-option s]]
-
           [tr-element :h4 [:settings_card-images "Card images"]]
           [:div
            [:label [:input {:type "checkbox"
@@ -840,6 +822,7 @@
         state (r/atom
                (-> (:options @app-state)
                    (select-keys [:pronouns :bespoke-sounds :language :card-language :sounds :default-format
+                                 :card-unplayable-fade-out :card-hover-movement
                                  :lobby-sounds :sounds-volume :background :custom-bg-url :card-zoom
                                  :pin-zoom :show-alt-art :card-resolution :pass-on-rez
                                  :auto-select-default-deck-casual :auto-select-default-deck-tournament

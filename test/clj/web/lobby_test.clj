@@ -26,9 +26,6 @@
            (lobby/auto-select-deck-id (assoc auto-opts :auto-select-default-deck-tournament true)
                                       "competitive" "standard" "Corp"))))
 
-  (testing "nil in rooms that never auto-select"
-    (is (nil? (lobby/auto-select-deck-id auto-opts "angel-arena" "standard" "Corp"))))
-
   (testing "nil for Any Side"
     (is (nil? (lobby/auto-select-deck-id auto-opts "casual" "standard" "Any Side"))))
 
@@ -42,6 +39,40 @@
   ([side deck]
    (cond-> {:uid side :side side :user {:username side}}
      deck (assoc :deck deck))))
+
+(deftest swap-parts-test
+  (is (= [{:username "Corp"}
+          " has swapped sides. "
+          {:username "Corp"}
+          " is now Runner. "
+          {:username "Runner"}
+          " is now Corp."]
+         (lobby/swap-parts
+           [(player "Corp") (player "Runner")]
+           nil))))
+
+(deftest single-player-swap-parts-test
+  (is (= [{:username "Corp"} " has swapped sides. " "Waiting for opponent."]
+         (lobby/swap-parts [(player "Corp")] "Any Side")))
+  (is (= [{:username "Corp"} " has swapped sides. "
+          {:username "Corp"} " is now Runner. "]
+         (lobby/swap-parts [(player "Corp")] "Runner"))))
+
+(deftest departure-username-role-test
+  (let [user {:username "Mirror"}
+        room {:players [{:uid "player" :user user}]
+              :spectators [{:uid "watcher" :user user}]}
+        spectator-part (lobby/lobby-username-part room "watcher" user)
+        player-part (lobby/lobby-username-part room "player" user)]
+    (is (= {:username "Mirror" :spectator true} spectator-part))
+    (is (= {:username "Mirror"} player-part))
+    (testing "the captured role survives removal from the room"
+      (let [room-after (assoc room :spectators [])]
+        (is (nil? (lobby/spectator? "watcher" room-after)))
+        (is (true? (:spectator spectator-part)))))
+    (testing "a player no longer in the room retains the generic username part"
+      (is (= {:username "Mirror"}
+             (lobby/lobby-username-part {:players [] :spectators []} "player" user))))))
 
 (defn- auto-select
   [lobby & {:keys [options deck-found?] :or {options auto-opts deck-found? true}}]

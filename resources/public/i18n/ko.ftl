@@ -453,7 +453,6 @@ lobby_title-error = 게임 제목을 입력해주십시오.
 lobby_too-little-data = 데이터가 너무 적음
 
 lobby_type = {$type ->
-    [angel-arena] undefined
     [casual] 캐주얼
     [competitive] = 경쟁
     [tournament] 토너먼트
@@ -575,10 +574,6 @@ settings_enter-valid = 유효한 이메일을 입력하십시오
 settings_ffg = FFG
 
 settings_game-stats = 게임 승/패 기록
-
-settings_get-log-top = 현재 로그 높이 입력
-
-settings_get-log-width = 현재 로그 너비 입력
 
 settings_high-res = 고해상도 카드 이미지 활성화
 

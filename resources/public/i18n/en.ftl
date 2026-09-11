@@ -298,6 +298,7 @@ deck-builder_new-runner = New Runner deck
 deck-builder_notes = Notes
 
 deck-builder_reset = Reset
+
 deck-builder_sort = Sort:
 
 deck-builder_save = Save
@@ -845,6 +846,8 @@ ingame-settings_runner-classic = Classic
 
 ingame-settings_runner-reverse = Reversed
 
+ingame-settings_reset-log-size = Reset log size
+
 ingame-settings_save = Save
 
 ingame-settings_show-alt = Show alternate card arts
@@ -1127,7 +1130,6 @@ lobby_too-little-data = Too little data
 lobby_tournament = Tournament
 
 lobby_type = {$type ->
-    [angel-arena] Angel Arena
     [casual] Casual
     [competitive] Competitive
     [join] Join
@@ -1623,6 +1625,10 @@ settings_card-backs-their-choice = Their Choice
 
 settings_card-backs-tip = You can earn more card backs by placing well in select online tournaments. If you're an artist with art that you think would make for a good card back, please feel free to contact us
 
+settings_card-unplayable-fade-out = Fade out unplayable cards
+
+settings_card-hover-movement = Responsive cards in hand
+
 settings_card-colors = Card state colors
 
 settings_card-colors-colorblind = Colorblind-safe (Okabe-Ito palette)
@@ -1643,7 +1649,7 @@ settings_card-colors-selectable = Selectable / playable
 
 settings_card-colors-selected = Selected
 
-settings_card-iamge = Card Image
+settings_card-image = Card Image
 
 settings_card-images = Card images
 
@@ -1713,11 +1719,9 @@ settings_game-stats = Game Win/Lose statistics
 
 settings_gameplay-settings = Gameplay Settings
 
-settings_get-log-top = Get current log top
-
-settings_get-log-width = Get current log width
-
 settings_ghost-trojans = Display ghosts for hosted programs
+
+settings_tactile-cards = Tactile cards
 
 settings_high-res = Enable high-resolution card images
 
@@ -1745,8 +1749,6 @@ settings_log-player-highlight-none = None
 
 settings_log-player-highlight-red-blue = Corp: Blue / Runner: Red
 
-settings_log-size = Log size
-
 settings_log-timestamps = Log timestamps
 
 settings_none = None
@@ -1754,6 +1756,8 @@ settings_none = None
 settings_nsg = NSG
 
 settings_pass-on-rez = Pass priority when rezzing ice
+
+settings_pin-base-art = Zoomed cards always use base art
 
 settings_pin-zoom = Keep zoomed cards on screen
 

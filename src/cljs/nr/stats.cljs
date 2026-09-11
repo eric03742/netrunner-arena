@@ -2,6 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
    [cljs.core.async :refer [<!] :as async]
+   [game.replay :refer [typing-log?]]
    [jinteki.cards :refer [all-cards]]
    [nr.ajax :refer [DELETE GET]]
    [nr.appstate :refer [app-state]]
@@ -11,7 +12,7 @@
    [nr.translations :refer [tr tr-format tr-room-type tr-side]]
    [nr.utils :refer [day-word-with-time-formatter faction-icon format-date-time
                      notnum->zero safe-divide player-highlight-option-class
-                     render-message render-player-highlight set-scroll-top store-scroll-top]]
+                     render-message render-system-message set-scroll-top store-scroll-top]]
    [nr.ws :as ws]
    [reagent.core :as r]))
 
@@ -31,8 +32,7 @@
 
 (defmethod ws/event-msg-handler :stats/update [{{:keys [userstats deck-id deckstats]} :?data}]
   (swap! app-state assoc :stats userstats)
-  (update-deck-stats deck-id deckstats)
-  (fetch-game-history))
+  (update-deck-stats deck-id deckstats))
 
 (defn- set-replay-shared [state gameid shared?]
   (swap! state (fn [s]
@@ -154,9 +154,10 @@
            (if (seq (:log game))
              (doall (map-indexed
                       (fn [i msg]
-                        (when-not (and (= (:user msg) "__system__") (= (:text msg) "typing"))
+                        (when-not (typing-log? msg)
                           (if (= (:user msg) "__system__")
-                            [:div.system {:key i} (render-message (render-player-highlight (:text msg) corp runner))]
+                            [:div.system {:key i}
+                             (render-system-message msg corp runner nil)]
                             [:div.message {:key i}
                              [avatar (:user msg) {:opts {:size 38}}]
                              [:div.content

@@ -1632,7 +1632,7 @@
       (let [mayfly (get-program state 0)
             deck (count (:deck (get-runner)))]
         (auto-pump-and-break state (refresh mayfly))
-        (core/process-action "continue" state :corp nil)
+        (do-action "continue" state :corp nil)
         (run-jack-out state)
         (click-prompt state :runner "Compile")
         (is (= (inc deck) (count (:deck (get-runner)))) "Mayfly should be back in stack"))))
@@ -1657,7 +1657,7 @@
       (click-prompt state :runner "Mayfly")
       (let [mayfly (get-program state 0)]
         (auto-pump-and-break state (refresh mayfly))
-        (core/process-action "continue" state :corp nil)
+        (do-action "continue" state :corp nil)
         (run-jack-out state)
         (click-prompt state :runner "Mayfly")
         (is (zero? (count (:deck (get-runner)))) "Mayfly should not be back in the stack"))))

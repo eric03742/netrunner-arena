@@ -1170,7 +1170,6 @@ lobby_too-little-data = Слишком мало данных
 lobby_tournament = Турнирные игры
 
 lobby_type = {$type ->
-    [angel-arena] Арена Ангелов
     [casual] Обычные
     [competitive] Соревновательные
     [join] Подключиться
@@ -1737,10 +1736,6 @@ settings_game-stats = Учёт статистики побед/поражени�
 
 settings_gameplay-settings = Игровые настройки
 
-settings_get-log-top = Записать текущую высоту журнала
-
-settings_get-log-width = Записать текущую ширину журнала
-
 settings_ghost-trojans = Отображать бледные дубликаты программ-троянов, установленных на карты-носители
 
 settings_high-res = Включить загрузку изображений высокого разрешения
@@ -1766,8 +1761,6 @@ settings_log-player-highlight = Подсвечивать игроков в жу�
 settings_log-player-highlight-none = Не подсвечивать
 
 settings_log-player-highlight-red-blue = Корпорация: Синий / Бегущий: Красный
-
-settings_log-size = Размер журнала
 
 settings_log-timestamps = Временные метки в журнале
 

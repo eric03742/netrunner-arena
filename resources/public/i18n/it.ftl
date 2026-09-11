@@ -1090,7 +1090,6 @@ lobby_too-little-data = Dati insufficienti
 lobby_tournament = Torneo
 
 lobby_type = {$type ->
-    [angel-arena] Angel Arena
     [casual] Casual
     [competitive] Competitiva
     [join] Unisciti
@@ -1620,10 +1619,6 @@ settings_game-stats = Statistiche vittorie/sconfitte
 
 settings_gameplay-settings = Impostazioni di gioco
 
-settings_get-log-top = Ottieni la parte superiore del log corrente
-
-settings_get-log-width = Ottieni la larghezza del log corrente
-
 settings_ghost-trojans = Mostra i trojan ospitati nel rig
 
 settings_high-res = Abilita immagini delle carte ad alta risoluzione
@@ -1649,8 +1644,6 @@ settings_log-player-highlight = Evidenziazione giocatore nel log
 settings_log-player-highlight-none = Nessuna
 
 settings_log-player-highlight-red-blue = Corp: Blu / Runner: Rosso
-
-settings_log-size = Dimensione log
 
 settings_log-timestamps = Timestamp log
 

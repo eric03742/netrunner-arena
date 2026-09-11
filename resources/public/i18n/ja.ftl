@@ -669,7 +669,6 @@ lobby_title = ルーム名
 lobby_title-error = ルーム名を修正してください。
 
 lobby_type = {$type ->
-    [angel-arena] Angel Arena
     [casual] Casual
     [competitive] Competitive
     [tournament] Tournament
@@ -798,8 +797,6 @@ settings_label-unrezzed-cards = 非レゾカードにラベルを表紙
 settings_language = 言語
 
 settings_layout-options = レイアウト設定
-
-settings_log-size = ゲームログサイズ
 
 settings_pass-on-rez = アイスのレゾ時に優先権をパス
 

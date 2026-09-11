@@ -46,6 +46,8 @@
 (def default-chat-messages
   ["Good luck & have fun!" "Thinking..." "Good game!" "Thank you for the game!" "Yes" "No"])
 
+(def chat-message-max-length 100)
+
 ;; Validation combinators
 (defn- validate-coll-of
   "Returns a validator that checks if value is a collection of items matching pred"
@@ -107,8 +109,12 @@
   "Validates default-decks is a map of side -> {format -> deck-id-string}"
   (validate-map-of keyword? (validate-map-of keyword? string?)))
 
-(def validate-chat-messages
-  (validate-coll-of string? vector?))
+(defn validate-chat-messages
+  [value]
+  (and (vector? value)
+       (<= (count value) (count default-chat-messages))
+       (every? string? value)
+       (every? #(<= (count %) chat-message-max-length) value)))
 
 (def zoom-default 1)
 (def zoom-step 0.15)
@@ -188,6 +194,16 @@
     :sync? true
     :validate-fn #(contains? valid-card-zoom-options %)
     :doc "How to display zoomed cards (image/text)"}
+   {:key :card-unplayable-fade-out
+    :default true
+    :sync? false  ; device-specific
+    :validate-fn boolean?
+    :doc "Whether to fade out unplayable cards in hand"}
+   {:key :card-hover-movement
+    :default true
+    :sync? false  ; device-specific
+    :validate-fn boolean?
+    :doc "Whether cards in hand should be responsive to mouse movement"}
    {:key :corp-card-sleeve
     :default "nsg-card-back"
     :sync? true
@@ -359,7 +375,7 @@
     :validate-fn boolean?
     :doc "Enable in-game sound effects on this device"}
    {:key :sounds-volume
-    :default 100
+    :default 50
     :sync? false  ; device-specific
     :validate-fn number?
     :doc "Sound effects volume level (0-100) on this device"}
@@ -379,7 +395,7 @@
     :validate-fn #(and (number? %) (<= zoom-min % zoom-max))
     :doc "UI zoom factor for this device (emulates browser zoom via CSS zoom on <html>)"}
    {:key :zoom-last-played-or-rezzed
-    :default false
+    :default true
     :sync? true
     :validate-fn boolean?
     :doc "Zoom the most recently rezzed or played card"}])
